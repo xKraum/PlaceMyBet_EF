@@ -14,8 +14,9 @@ namespace PlaceMyBet.Controllers
         public List<Usuario> Get() => new UsuariosRepository().Retrieve();
 
         // GET: api/Usuarios/5
-        public Usuario Get(int id) => new UsuariosRepository().Retrieve(id);
-        //api/usuarios/0 - Al no tener una Primary Key numérica autoincrementativa se debe empezar por índice 0 (En los demás casos el primer valor empieza por índice 1).
+        public string Get(int id) => /*new UsuariosRepository().Retrieve(id);*/"Null (temp)";
+        //De momento lo dejo devolviendo un string porque la Primary Key de Usuario
+        //es un string y no se puede acceder mediante su índice.
 
         // POST: api/Usuarios
         public void Post([FromBody]string value)

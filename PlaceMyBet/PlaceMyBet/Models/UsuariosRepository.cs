@@ -22,16 +22,17 @@ namespace PlaceMyBet.Models
             return users;
         }
 
-        internal Usuario Retrieve(int id)
-        {
-            Usuario u = null;
+        //Desactivado temporalmente dado que no se puede hacer un SELECT por índice numérico.
+        //internal Usuario Retrieve(int id)
+        //{
+        //    Usuario u = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM usuarios WHERE `idEmail` = {id};");
+        //    List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM usuarios WHERE `idEmail` = {id};");
 
-            if (dataReceived.Count > 0)
-                u = new Usuario((string)dataReceived[0][0], (string)dataReceived[0][1], (string)dataReceived[0][2], (int)dataReceived[0][3]);
+        //    if (dataReceived.Count > 0)
+        //        u = new Usuario((string)dataReceived[0][0], (string)dataReceived[0][1], (string)dataReceived[0][2], (int)dataReceived[0][3]);
 
-            return u;
-        }
+        //    return u;
+        //}
     }
 }
