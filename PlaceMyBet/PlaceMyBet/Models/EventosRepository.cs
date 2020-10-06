@@ -12,7 +12,7 @@ namespace PlaceMyBet.Models
         {
             List<Evento> events = new List<Evento>();
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM eventos");
+            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM eventos;");
 
             foreach (var item in dataReceived)
             {
@@ -26,7 +26,7 @@ namespace PlaceMyBet.Models
         {
             Evento e = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id}");
+            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
 
             if (dataReceived.Count > 0)
                 e = new Evento((int)dataReceived[0][0], (string)dataReceived[0][1], (string)dataReceived[0][2], (DateTime)dataReceived[0][3]);

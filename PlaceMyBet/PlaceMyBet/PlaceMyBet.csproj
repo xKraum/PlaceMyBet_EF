@@ -202,14 +202,26 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Common\BBDD.cs" />
+    <Compile Include="Controllers\ApuestasController.cs" />
+    <Compile Include="Controllers\CuentasController.cs" />
     <Compile Include="Controllers\EventosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MercadosController.cs" />
+    <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Apuesta.cs" />
+    <Compile Include="Models\ApuestasRepository.cs" />
+    <Compile Include="Models\Cuenta.cs" />
+    <Compile Include="Models\CuentasRepository.cs" />
     <Compile Include="Models\Evento.cs" />
     <Compile Include="Models\EventosRepository.cs" />
+    <Compile Include="Models\Mercado.cs" />
+    <Compile Include="Models\MercadosRepository.cs" />
+    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Models\UsuariosRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
