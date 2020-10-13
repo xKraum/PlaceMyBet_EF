@@ -33,5 +33,32 @@ namespace PlaceMyBet.Models
 
             return e;
         }
+
+        //Obtener objeto sin información sensible (ids, datos importantes, etc.)
+        internal List<EventoDTO> RetrieveDTO()
+        {
+            List<EventoDTO> events = new List<EventoDTO>();
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM eventos;");
+
+            foreach (var item in dataReceived)
+            {
+                events.Add(new EventoDTO((string)item[1], (string)item[2], (DateTime)item[3]));
+            }
+
+            return events;
+        }
+
+        internal EventoDTO RetrieveDTO(int id)
+        {
+            EventoDTO e = null;
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
+
+            if (dataReceived.Count > 0)
+                e = new EventoDTO((string)dataReceived[0][1], (string)dataReceived[0][2], (DateTime)dataReceived[0][3]);
+
+            return e;
+        }
     }
 }

@@ -5,21 +5,33 @@ using System.Web;
 
 namespace PlaceMyBet.Models
 {
-    public class Evento
+    public class Evento : EventoDTO
     {
         private int idEvento;
-        private string equipoLocal;
-        private string equipoVisitante;
-        private DateTime fecha;
-
         public int IdEvento { get { return idEvento; } set { idEvento = value; } }
+
+
+        public Evento(int idEvento, string equipoLocal, string equipoVisitante, DateTime fecha) : base(equipoLocal, equipoVisitante, fecha)
+        {
+            this.idEvento = idEvento;
+            base.equipoLocal = equipoLocal;
+            base.equipoVisitante = equipoVisitante;
+            base.fecha = fecha;
+        }
+    }
+
+    public class EventoDTO
+    {
+        protected string equipoLocal;
+        protected string equipoVisitante;
+        protected DateTime fecha;
+
         public string EquipoLocal { get { return equipoLocal; } set { equipoLocal = value; } }
         public string EquipoVisitante { get { return equipoVisitante; } set { equipoVisitante = value; } }
         public DateTime Fecha { get { return fecha; } set { fecha = value; } }
 
-        public Evento(int idEvento, string equipoLocal, string equipoVisitante, DateTime fecha)
+        public EventoDTO(string equipoLocal, string equipoVisitante, DateTime fecha)
         {
-            this.idEvento = idEvento;
             this.equipoLocal = equipoLocal;
             this.equipoVisitante = equipoVisitante;
             this.fecha = fecha;
