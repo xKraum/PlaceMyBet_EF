@@ -34,5 +34,32 @@ namespace PlaceMyBet.Models
 
             return m;
         }
+
+        //Obtener objeto sin información sensible (ids, datos importantes, etc.)
+        internal List<MercadoDTO> RetrieveDTO()
+        {
+            List<MercadoDTO> markets = new List<MercadoDTO>();
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM mercados;");
+
+            foreach (var item in dataReceived)
+            {
+                markets.Add(new MercadoDTO((double)item[2], (double)item[3], (double)item[4]));
+            }
+
+            return markets;
+        }
+
+        internal MercadoDTO RetrieveDTO(int id)
+        {
+            MercadoDTO m = null;
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
+
+            if (dataReceived.Count > 0)
+                m = new MercadoDTO((double)dataReceived[0][2], (double)dataReceived[0][3], (double)dataReceived[0][4]);
+
+            return m;
+        }
     }
 }
