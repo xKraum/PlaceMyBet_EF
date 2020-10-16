@@ -64,5 +64,44 @@ namespace PlaceMyBet.Models
 
             return b;
         }
+
+
+        internal void Save(Apuesta bet)
+        {
+            Mercado market = new MercadosRepository().Retrieve(bet.RefMercado);
+            Evento e = new EventosRepository().Retrieve(market.RefEvento);
+
+            double quota = (bet.TipoOverUnder == "Over") ? market.CuotaOver : market.CuotaUnder; 
+
+            Common.BBDD.SetData($"INSERT INTO `APUESTAS` (`idApuesta`, `refEmail`, `refMercado`, `tipoOverUnder`, `cuota`, `dineroApostado`, `fecha`) " +
+                $"VALUES (NULL, '{bet.RefEmail}', {bet.RefMercado}, '{bet.TipoOverUnder}', {quota.ToString().Replace(',', '.')}," +
+                $" {bet.DineroApostado.ToString().Replace(',', '.')}, '{e.Fecha.ToString("yyyy-MM-dd")}')");
+
+
+            string newQuota = CalculateQuota(bet, market).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+
+            if (bet.TipoOverUnder == "Over")
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuota}, " +
+                    $"`dineroOver`={(bet.DineroApostado + market.DineroOver).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
+                    $"WHERE `idMercado`={bet.RefMercado};");
+            else
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuota}, " +
+                    $"`dineroUnder`={(bet.DineroApostado + market.DineroUnder).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
+                    $"WHERE `idMercado`={bet.RefMercado};");
+
+            Console.WriteLine();
+        }
+
+        private double CalculateQuota(Apuesta bet, Mercado market)
+        {
+            double probability;
+
+            if (bet.TipoOverUnder == "Over")
+                probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
+            else
+                probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
+
+            return 1 / probability * 0.95;
+        }
     }
 }

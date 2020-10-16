@@ -17,8 +17,9 @@ namespace PlaceMyBet.Controllers
         public ApuestaDTO Get(int id) => new ApuestasRepository().RetrieveDTO(id); //new ApuestasRepository().Retrieve(id);
 
         // POST: api/Apuestas
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Apuesta bet)
         {
+            new ApuestasRepository().Save(bet);
         }
 
         // PUT: api/Apuestas/5
