@@ -72,24 +72,33 @@ namespace PlaceMyBet.Models
             Evento e = new EventosRepository().Retrieve(market.RefEvento);
 
             double quota = (bet.TipoOverUnder == "Over") ? market.CuotaOver : market.CuotaUnder; 
-
+            
+            //Inserto una nueva apuesta, con el correspondiente DINERO APOSTADO a Over o Under.
             Common.BBDD.SetData($"INSERT INTO `APUESTAS` (`idApuesta`, `refEmail`, `refMercado`, `tipoOverUnder`, `cuota`, `dineroApostado`, `fecha`) " +
                 $"VALUES (NULL, '{bet.RefEmail}', {bet.RefMercado}, '{bet.TipoOverUnder}', {quota.ToString().Replace(',', '.')}," +
                 $" {bet.DineroApostado.ToString().Replace(',', '.')}, '{e.Fecha.ToString("yyyy-MM-dd")}')");
 
-
-            string newQuota = CalculateQuota(bet, market).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-
+            //Actualizo el DINERO OVER/UNDER de la tabla MERCADOS para poder actualizar luego la cuota.
             if (bet.TipoOverUnder == "Over")
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuota}, " +
-                    $"`dineroOver`={(bet.DineroApostado + market.DineroOver).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
+                Common.BBDD.SetData($"UPDATE `MERCADOS` " +
+                    $"SET `dineroOver`={(bet.DineroApostado + market.DineroOver).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
                     $"WHERE `idMercado`={bet.RefMercado};");
             else
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuota}, " +
-                    $"`dineroUnder`={(bet.DineroApostado + market.DineroUnder).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
+                Common.BBDD.SetData($"UPDATE `MERCADOS` " +
+                    $"SET `dineroUnder`={(bet.DineroApostado + market.DineroUnder).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
                     $"WHERE `idMercado`={bet.RefMercado};");
 
-            Console.WriteLine();
+            //Vuelvo a crear el objeto MERCADO para que tenga el DINERO OVER/UNDER actualizado
+            market = new MercadosRepository().Retrieve(bet.RefMercado);
+
+            //Calculo la nueva CUOTA OVER o UNDER.
+            string newQuota = CalculateQuota(bet, market).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+
+            //Actualizo la CUOTA según sea OVER o UNDER en la tabla MERCADOS.
+            if (bet.TipoOverUnder == "Over")
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuota} WHERE `idMercado`={bet.RefMercado};");
+            else
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuota} WHERE `idMercado`={bet.RefMercado};");
         }
 
         private double CalculateQuota(Apuesta bet, Mercado market)
