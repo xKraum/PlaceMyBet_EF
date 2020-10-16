@@ -69,14 +69,14 @@ namespace PlaceMyBet.Models
         internal void Save(Apuesta bet)
         {
             Mercado market = new MercadosRepository().Retrieve(bet.RefMercado);
-            Evento e = new EventosRepository().Retrieve(market.RefEvento);
+            //Evento e = new EventosRepository().Retrieve(market.RefEvento);
 
             double quota = (bet.TipoOverUnder == "Over") ? market.CuotaOver : market.CuotaUnder; 
             
             //Inserto una nueva apuesta, con el correspondiente DINERO APOSTADO a Over o Under.
             Common.BBDD.SetData($"INSERT INTO `APUESTAS` (`idApuesta`, `refEmail`, `refMercado`, `tipoOverUnder`, `cuota`, `dineroApostado`, `fecha`) " +
                 $"VALUES (NULL, '{bet.RefEmail}', {bet.RefMercado}, '{bet.TipoOverUnder}', {quota.ToString().Replace(',', '.')}," +
-                $" {bet.DineroApostado.ToString().Replace(',', '.')}, '{e.Fecha.ToString("yyyy-MM-dd")}')");
+                $" {bet.DineroApostado.ToString().Replace(',', '.')}, '{DateTime.Now.ToString("yyyy-MM-dd")}')");
 
             //Actualizo el DINERO OVER/UNDER de la tabla MERCADOS para poder actualizar luego la cuota.
             if (bet.TipoOverUnder == "Over")
