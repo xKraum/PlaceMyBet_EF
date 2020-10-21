@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace PlaceMyBet.Models
         {
             Cuenta a = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM cuentas WHERE `idTarjeta` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM cuentas WHERE `idTarjeta` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM cuentas WHERE `idTarjeta` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 a = new Cuenta((int)dataReceived[0][0], (double)dataReceived[0][1], (string)dataReceived[0][2], (string)dataReceived[0][3]);

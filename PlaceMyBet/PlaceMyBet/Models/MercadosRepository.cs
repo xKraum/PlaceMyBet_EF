@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace PlaceMyBet.Models
         {
             Mercado m = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `idMercado` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 m = new Mercado((int)dataReceived[0][0], (int)dataReceived[0][1], (double)dataReceived[0][2], (double)dataReceived[0][3], (double)dataReceived[0][4],
@@ -54,7 +58,10 @@ namespace PlaceMyBet.Models
         {
             MercadoDTO m = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `idMercado` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 m = new MercadoDTO((double)dataReceived[0][2], (double)dataReceived[0][3], (double)dataReceived[0][4]);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace PlaceMyBet.Models
         {
             Apuesta b = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas WHERE `idApuesta` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas WHERE `idApuesta` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM apuestas WHERE `idApuesta` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 b = new Apuesta((int)dataReceived[0][0], (string)dataReceived[0][1], (int)dataReceived[0][2], (string)dataReceived[0][3], (double)dataReceived[0][4],
@@ -50,13 +54,16 @@ namespace PlaceMyBet.Models
             return bets;
         }
 
-        internal ApuestaDTO RetrieveDTO(int id)
+        internal ApuestaDTO RetrieveDTO(int id)//Consultas parametrizadas
         {
             ApuestaDTO b = null;
 
-            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas WHERE `idApuesta` = {id};");
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
-                $"WHERE `idApuesta` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
+            //    $"WHERE `idApuesta` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
+                $"WHERE `idApuesta` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 b = new ApuestaDTO((string)dataReceived[0][1], (string)dataReceived[0][3], (double)dataReceived[0][4],
@@ -66,7 +73,7 @@ namespace PlaceMyBet.Models
         }
 
 
-        internal void Save(Apuesta bet)
+        internal void Save(Apuesta bet)//Consultas NO parametrizadas
         {
             Mercado market = new MercadosRepository().Retrieve(bet.RefMercado);
             //Evento e = new EventosRepository().Retrieve(market.RefEvento);

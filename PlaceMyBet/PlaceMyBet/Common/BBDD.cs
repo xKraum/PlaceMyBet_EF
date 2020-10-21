@@ -25,12 +25,40 @@ namespace PlaceMyBet.Common
         public static List<ArrayList> GetData(string querySQL)
         {
             connectionWorking = true;
-
             dataRows = new List<ArrayList>();
 
             MySqlConnection databaseConnection = new MySqlConnection(connectionString);
             MySqlCommand commandDatabase = new MySqlCommand(querySQL, databaseConnection);
             commandDatabase.CommandTimeout = 60;
+
+            ExecuteGetDataQuery(databaseConnection, commandDatabase, dataRows);
+
+            return dataRows;
+        }
+
+        //SELECT QUERIES PARAMETERIZED
+        /// <summary>
+        /// Ejecuta una consulta de SELECT parametrizada (MySqlCommand), para mayor seguridad.
+        /// Se debe de cargar cada parámetro del MySqlCommand previamente. Ej: "commandDatabase.Parameters.AddWithValue("@name", "Example");"
+        /// </summary>
+        /// <param name="commandDatabase">Parámetro SQL Query (Select).</param>
+        /// <returns>Devuelve una lista que incluye un array de valores dentro de ella por cada fila encontrada al hacer el SELECT.</returns>
+        public static List<ArrayList> GetData(MySqlCommand commandDatabase)
+        {
+            connectionWorking = true;
+            dataRows = new List<ArrayList>();
+
+            MySqlConnection databaseConnection = new MySqlConnection(connectionString);
+            commandDatabase.CommandTimeout = 60;
+            commandDatabase.Connection = databaseConnection;
+
+            ExecuteGetDataQuery(databaseConnection, commandDatabase, dataRows);
+
+            return dataRows;
+        }
+
+        private static void ExecuteGetDataQuery(MySqlConnection databaseConnection, MySqlCommand commandDatabase, List<ArrayList> dataRows)
+        {
             MySqlDataReader reader;
 
             try
@@ -51,9 +79,8 @@ namespace PlaceMyBet.Common
             {
                 connectionWorking = false;
             }
-            databaseConnection.Close();
 
-            return dataRows;
+            databaseConnection.Close();
         }
 
 
@@ -85,5 +112,12 @@ namespace PlaceMyBet.Common
                 }
             }
         }
+        /*
+        Añadir SetData parametrizado - PENDIENTE
+
+        MySqlCommand commandDatabase = new MySqlCommand("INSERT INTO `tabla1` (`id`, `campo1`) VALUES (@id, @campo1)");
+        commandDatabase.Parameters.AddWithValue("@id", id);
+        commandDatabase.Parameters.AddWithValue("@campo1", valor1);
+        */
     }
 }

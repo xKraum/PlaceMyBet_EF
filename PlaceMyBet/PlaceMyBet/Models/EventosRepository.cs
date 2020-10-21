@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace PlaceMyBet.Models
         {
             Evento e = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM eventos WHERE `idEvento` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 e = new Evento((int)dataReceived[0][0], (string)dataReceived[0][1], (string)dataReceived[0][2], (DateTime)dataReceived[0][3]);
@@ -53,7 +57,10 @@ namespace PlaceMyBet.Models
         {
             EventoDTO e = null;
 
-            List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
+            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM eventos WHERE `idEvento` = {id};");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM eventos WHERE `idEvento` = @id;");
+            commandDatabase.Parameters.AddWithValue("@id", id);
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
 
             if (dataReceived.Count > 0)
                 e = new EventoDTO((string)dataReceived[0][1], (string)dataReceived[0][2], (DateTime)dataReceived[0][3]);
