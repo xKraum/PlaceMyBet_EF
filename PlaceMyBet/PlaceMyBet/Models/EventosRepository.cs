@@ -9,6 +9,7 @@ namespace PlaceMyBet.Models
 {
     public class EventosRepository
     {
+        #region FullRetrieves - Obtienen información sensible como la ID - (Fuera de uso)
         internal List<Evento> Retrieve()
         {
             List<Evento> events = new List<Evento>();
@@ -37,6 +38,7 @@ namespace PlaceMyBet.Models
 
             return e;
         }
+        #endregion
 
         //Obtener objeto sin información sensible (ids, datos importantes, etc.)
         internal List<EventoDTO> RetrieveDTO()
@@ -66,6 +68,24 @@ namespace PlaceMyBet.Models
                 e = new EventoDTO((string)dataReceived[0][1], (string)dataReceived[0][2], (DateTime)dataReceived[0][3]);
 
             return e;
+        }
+
+        internal List<Mercado> RetrieveByEventAndMarketType(int id, double tipoMercado)
+        {
+            List<Mercado> markets = new List<Mercado>();
+
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `refEvento`=@refEvento AND `tipoMercado`=@tipoMercado;");
+            commandDatabase.Parameters.AddWithValue("@refEvento", id);
+            commandDatabase.Parameters.AddWithValue("@tipoMercado", tipoMercado);
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
+
+            foreach (var item in dataReceived)
+            {
+                markets.Add(new Mercado((int)item[0], (int)item[1], (double)item[2], (double)item[3], (double)item[4], (double)item[5], (double)item[6]));
+            }
+
+            return markets;
         }
     }
 }

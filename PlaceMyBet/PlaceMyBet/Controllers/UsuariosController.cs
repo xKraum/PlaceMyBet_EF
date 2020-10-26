@@ -1,5 +1,6 @@
 ﻿using PlaceMyBet.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,11 +14,11 @@ namespace PlaceMyBet.Controllers
         // GET: api/Usuarios
         public List<Usuario> Get() => new UsuariosRepository().Retrieve();
 
-        // GET: api/Usuarios/5
-        public string Get(int id) => /*new UsuariosRepository().Retrieve(id);*/"Null (temp)";
-        //De momento lo dejo devolviendo un string porque la Primary Key de Usuario
-        //es un string y no se puede acceder mediante su índice.
+        // GET: api/Usuarios?idEmail=example@gmail.com (Funciona correctamente)
+        //public Usuario Get(string idEmail) => new UsuariosRepository().Retrieve(idEmail);
 
+        public List<ArrayList> Get(string idEmail, double tipoMercado) => new UsuariosRepository().RetrieveBetsByEmail(idEmail, tipoMercado);
+        
         // POST: api/Usuarios
         public void Post([FromBody]string value)
         {
