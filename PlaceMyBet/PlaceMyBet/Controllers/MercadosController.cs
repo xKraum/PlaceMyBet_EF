@@ -1,5 +1,6 @@
 ﻿using PlaceMyBet.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,6 +16,9 @@ namespace PlaceMyBet.Controllers
 
         // GET: api/Mercados/5
         public MercadoDTO Get(int id) => new MercadosRepository().RetrieveDTO(id); //new MercadosRepository().Retrieve(id);
+        
+        // GET: api/Mercados/1?idEmail=example@gmail.com
+        public List<BetsByMarketAndEmailDTO> Get(int id, string idEmail) => new MercadosRepository().RetrieveByMarketAndEmail(id, idEmail); //new MercadosRepository().Retrieve(id);
 
         // POST: api/Mercados
         public void Post([FromBody]string value)

@@ -17,7 +17,7 @@ namespace PlaceMyBet.Controllers
         public EventoDTO Get(int id) => new EventosRepository().RetrieveDTO(id); //new EventosRepository().Retrieve(id);
         
         // GET: api/Eventos/5?type={value}
-        public List<Mercado> GetMercados(int id, double tipoMercado) => new EventosRepository().RetrieveByEventAndMarketType(id, tipoMercado);
+        public List<Mercado> Get(int id, double tipoMercado) => new EventosRepository().RetrieveByEventAndMarketType(id, tipoMercado);
 
         // POST: api/Eventos
         public void Post([FromBody]string value)

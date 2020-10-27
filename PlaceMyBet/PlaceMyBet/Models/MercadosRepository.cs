@@ -68,5 +68,27 @@ namespace PlaceMyBet.Models
 
             return m;
         }
+
+        internal List<BetsByMarketAndEmailDTO> RetrieveByMarketAndEmail(int idMercado, string idEmail)
+        {
+            List<BetsByMarketAndEmailDTO> betsInfo = new List<BetsByMarketAndEmailDTO>();
+
+            string query = "SELECT tipoMercado, tipoOverUnder, cuota, dineroApostado FROM apuestas " +
+                "INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado INNER JOIN usuarios ON apuestas.refEmail = usuarios.idEmail " + 
+                "WHERE idMercado = @idMercado AND idEmail = @idEmail;";
+
+            MySqlCommand commandDatabase = new MySqlCommand(query);
+            commandDatabase.Parameters.AddWithValue("@idMercado", idMercado);
+            commandDatabase.Parameters.AddWithValue("@idEmail", idEmail);
+
+            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);//Recibo una List de ArrayList donde cada ArrayList es una fila de datos.
+
+            foreach (var betInfo in dataReceived)//Por cada fila de datos
+            {
+                betsInfo.Add(new BetsByMarketAndEmailDTO((double)betInfo[0], (string)betInfo[1], (double)betInfo[2], (double)betInfo[3]));
+            }
+
+            return betsInfo;
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace PlaceMyBet.Models
         {
             List<Mercado> markets = new List<Mercado>();
 
-            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `refEvento`=@refEvento AND `tipoMercado`=@tipoMercado;");
+            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `refEvento` = @refEvento AND `tipoMercado` = @tipoMercado;");
             commandDatabase.Parameters.AddWithValue("@refEvento", id);
             commandDatabase.Parameters.AddWithValue("@tipoMercado", tipoMercado);
 

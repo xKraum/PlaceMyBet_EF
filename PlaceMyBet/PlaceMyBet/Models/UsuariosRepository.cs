@@ -24,9 +24,10 @@ namespace PlaceMyBet.Models
             return users;
         }
 
-        internal List<ArrayList> RetrieveBetsByEmail(string idEmail, double tipoMercado)
+        internal List<BetsByEmailAndMarketTypeDTO> RetrieveBetsByEmail(string idEmail, double tipoMercado)
         {
-            List<ArrayList> betsInfo = new List<ArrayList>();
+            List<BetsByEmailAndMarketTypeDTO> betsInfo = new List<BetsByEmailAndMarketTypeDTO>();
+
             string query = "SELECT `idEvento`, `tipoOverUnder`, `cuota`, `dineroApostado` FROM apuestas " +
                 "INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
                 "INNER JOIN eventos ON eventos.idEvento = mercados.refEvento " +
@@ -38,15 +39,9 @@ namespace PlaceMyBet.Models
 
             List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);//Recibo una List de ArrayList donde cada ArrayList es una fila de datos.
 
-            foreach (var row in dataReceived)//Por cada fila de datos
+            foreach (var betInfo in dataReceived)//Por cada fila de datos
             {
-                ArrayList betInfo = new ArrayList();
-                foreach (var item in row)//Por cada dato que haya en cada fila de datos
-                {
-                    betInfo.Add(item);
-                }
-
-                betsInfo.Add(betInfo);
+                betsInfo.Add(new BetsByEmailAndMarketTypeDTO((int)betInfo[0], (string)betInfo[1], (double)betInfo[2], (double)betInfo[3]));
             }
 
             return betsInfo;

@@ -60,4 +60,48 @@ namespace PlaceMyBet.Models
             this.tipoMercado = tipoMercado;
         }
     }
+
+    #region DTO Pedidos - AE4
+    public class BetsByEmailAndMarketTypeDTO
+    {
+        private int idEvento;
+        private string tipoOverUnder;
+        private double cuota;
+        private double dineroApostado;
+
+        public int IdEvento { get => idEvento; set => idEvento = value; }
+        public string TipoOverUnder { get => tipoOverUnder; set => tipoOverUnder = value; }
+        public double Cuota { get => cuota; set => cuota = value; }
+        public double DineroApostado { get => dineroApostado; set => dineroApostado = value; }
+
+        public BetsByEmailAndMarketTypeDTO(int idEvento, string tipoOverUnder, double cuota, double dineroApostado)
+        {
+            this.idEvento = idEvento;
+            this.tipoOverUnder = tipoOverUnder;
+            this.cuota = cuota;
+            this.dineroApostado = dineroApostado;
+        }
+    }
+
+    public class BetsByMarketAndEmailDTO
+    {
+        private double tipoMercado;
+        private string tipoOverUnder;
+        private double cuota;
+        private double dineroApostado;
+
+        public double TipoMercado { get => tipoMercado; set => tipoMercado = value; }
+        public string TipoOverUnder { get => tipoOverUnder; set => tipoOverUnder = value; }
+        public double Cuota { get => cuota; set => cuota = value; }
+        public double DineroApostado { get => dineroApostado; set => dineroApostado = value; }
+
+        public BetsByMarketAndEmailDTO(double tipoMercado, string tipoOverUnder, double cuota, double dineroApostado)
+        {
+            this.tipoMercado = tipoMercado;
+            this.tipoOverUnder = tipoOverUnder;
+            this.cuota = cuota;
+            this.dineroApostado = dineroApostado;
+        }
+    }
+    #endregion
 }
