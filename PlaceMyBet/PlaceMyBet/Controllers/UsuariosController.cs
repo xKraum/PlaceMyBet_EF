@@ -17,6 +17,7 @@ namespace PlaceMyBet.Controllers
         // GET: api/Usuarios?idEmail=example@gmail.com (Funciona correctamente)
         //public Usuario Get(string idEmail) => new UsuariosRepository().Retrieve(idEmail);
 
+        [Authorize(Roles = "Admin")]
         public List<BetsByEmailAndMarketTypeDTO> Get(string idEmail, double tipoMercado) => new UsuariosRepository().RetrieveBetsByEmail(idEmail, tipoMercado);
         
         // POST: api/Usuarios
