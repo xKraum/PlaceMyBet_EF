@@ -98,21 +98,22 @@ namespace PlaceMyBet.Models
             //Vuelvo a crear el objeto MERCADO para que tenga el DINERO OVER/UNDER actualizado
             market = new MercadosRepository().Retrieve(bet.RefMercado);
 
-            //Calculo la nueva CUOTA OVER o UNDER.
-            string newQuota = CalculateQuota(bet, market).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            //Calculo la nueva CUOTA OVER UNDER.
+            string newQuotaOver = CalculateQuota(bet, market, true).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            string newQuotaUnder = CalculateQuota(bet, market, false).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
 
             //Actualizo la CUOTA según sea OVER o UNDER en la tabla MERCADOS.
-            if (bet.TipoOverUnder == "Over")
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuota} WHERE `idMercado`={bet.RefMercado};");
-            else
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuota} WHERE `idMercado`={bet.RefMercado};");
+            //if (bet.TipoOverUnder == "Over")
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuotaOver} WHERE `idMercado`={bet.RefMercado};");
+            //else
+                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuotaUnder} WHERE `idMercado`={bet.RefMercado};");
         }
 
-        private double CalculateQuota(Apuesta bet, Mercado market)
+        private double CalculateQuota(Apuesta bet, Mercado market, bool isOver)
         {
             double probability;
 
-            if (bet.TipoOverUnder == "Over")
+            if (isOver)
                 probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
             else
                 probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
