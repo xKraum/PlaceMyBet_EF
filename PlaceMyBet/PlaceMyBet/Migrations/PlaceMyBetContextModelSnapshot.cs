@@ -221,13 +221,13 @@ namespace PlaceMyBet.Migrations
             modelBuilder.Entity("PlaceMyBet.Models.Apuesta", b =>
                 {
                     b.HasOne("PlaceMyBet.Models.Mercado", "Mercado")
-                        .WithMany()
+                        .WithMany("Apuestas")
                         .HasForeignKey("MercadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PlaceMyBet.Models.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Apuestas")
                         .HasForeignKey("UsuarioId");
                 });
 

@@ -15,6 +15,7 @@ namespace PlaceMyBet.Models
         public double DineroUnder { get; set; }
         public int EventoId { get; set; }
         public Evento Evento { get; set; }
+        public List<Apuesta> Apuestas { get; set; }
 
         public Mercado() { }
         public Mercado(int mercadoId, double tipoMercado, double cuotaOver, double cuotaUnder, double dineroOver, double dineroUnder, int eventoId)

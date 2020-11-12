@@ -9,7 +9,7 @@ using PlaceMyBet.Models;
 namespace PlaceMyBet.Migrations
 {
     [DbContext(typeof(PlaceMyBetContext))]
-    [Migration("20201112180354_m1")]
+    [Migration("20201116142521_m1")]
     partial class m1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,13 +223,13 @@ namespace PlaceMyBet.Migrations
             modelBuilder.Entity("PlaceMyBet.Models.Apuesta", b =>
                 {
                     b.HasOne("PlaceMyBet.Models.Mercado", "Mercado")
-                        .WithMany()
+                        .WithMany("Apuestas")
                         .HasForeignKey("MercadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PlaceMyBet.Models.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Apuestas")
                         .HasForeignKey("UsuarioId");
                 });
 
