@@ -12,83 +12,21 @@ namespace PlaceMyBet.Models
         internal List<Mercado> Retrieve()
         {
             List<Mercado> markets = new List<Mercado>();
-
-            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM mercados;");
-
-            foreach (var item in dataReceived)
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                markets.Add(new Mercado((int)item[0], (int)item[1], (double)item[2], (double)item[3], (double)item[4], (double)item[5], (double)item[6]));
+                markets = context.Mercados.ToList();
             }
-
             return markets;
         }
 
         internal Mercado Retrieve(int id)
         {
             Mercado m = null;
-
-            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
-            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `idMercado` = @id;");
-            commandDatabase.Parameters.AddWithValue("@id", id);
-            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
-
-            if (dataReceived.Count > 0)
-                m = new Mercado((int)dataReceived[0][0], (int)dataReceived[0][1], (double)dataReceived[0][2], (double)dataReceived[0][3], (double)dataReceived[0][4],
-                    (double)dataReceived[0][5], (double)dataReceived[0][6]);
-
-            return m;
-        }
-
-        //Obtener objeto sin información sensible (ids, datos importantes, etc.)
-        internal List<MercadoDTO> RetrieveDTO()
-        {
-            List<MercadoDTO> markets = new List<MercadoDTO>();
-
-            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM mercados;");
-
-            foreach (var item in dataReceived)
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                markets.Add(new MercadoDTO((double)item[2], (double)item[3], (double)item[4]));
+                m = context.Mercados.Where(s => s.MercadoId == id).FirstOrDefault();
             }
-
-            return markets;
-        }
-
-        internal MercadoDTO RetrieveDTO(int id)
-        {
-            MercadoDTO m = null;
-
-            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM mercados WHERE `idMercado` = {id};");
-            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM mercados WHERE `idMercado` = @id;");
-            commandDatabase.Parameters.AddWithValue("@id", id);
-            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
-
-            if (dataReceived.Count > 0)
-                m = new MercadoDTO((double)dataReceived[0][2], (double)dataReceived[0][3], (double)dataReceived[0][4]);
-
             return m;
-        }
-
-        internal List<BetsByMarketAndEmailDTO> RetrieveByMarketAndEmail(int idMercado, string idEmail)
-        {
-            List<BetsByMarketAndEmailDTO> betsInfo = new List<BetsByMarketAndEmailDTO>();
-
-            string query = "SELECT tipoMercado, tipoOverUnder, cuota, dineroApostado FROM apuestas " +
-                "INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado INNER JOIN usuarios ON apuestas.refEmail = usuarios.idEmail " + 
-                "WHERE idMercado = @idMercado AND idEmail = @idEmail;";
-
-            MySqlCommand commandDatabase = new MySqlCommand(query);
-            commandDatabase.Parameters.AddWithValue("@idMercado", idMercado);
-            commandDatabase.Parameters.AddWithValue("@idEmail", idEmail);
-
-            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);//Recibo una List de ArrayList donde cada ArrayList es una fila de datos.
-
-            foreach (var betInfo in dataReceived)//Por cada fila de datos
-            {
-                betsInfo.Add(new BetsByMarketAndEmailDTO((double)betInfo[0], (string)betInfo[1], (double)betInfo[2], (double)betInfo[3]));
-            }
-
-            return betsInfo;
         }
     }
 }

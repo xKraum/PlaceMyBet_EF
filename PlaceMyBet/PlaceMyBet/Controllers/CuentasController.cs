@@ -11,10 +11,10 @@ namespace PlaceMyBet.Controllers
     public class CuentasController : ApiController
     {
         // GET: api/Cuentas
-        public List<Cuenta> Get() => new CuentasRepository().Retrieve();
+        //public List<Cuenta> Get() => new CuentasRepository().Retrieve();
 
         // GET: api/Cuentas/5
-        public Cuenta Get(int id) => new CuentasRepository().Retrieve(id);
+        //public Cuenta Get(int id) => new CuentasRepository().Retrieve(id);
 
         // POST: api/Cuentas
         public void Post([FromBody]string value)

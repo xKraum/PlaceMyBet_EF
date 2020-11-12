@@ -12,13 +12,11 @@ namespace PlaceMyBet.Controllers
     public class UsuariosController : ApiController
     {
         // GET: api/Usuarios
-        public List<Usuario> Get() => new UsuariosRepository().Retrieve();
 
-        // GET: api/Usuarios?idEmail=example@gmail.com (Funciona correctamente)
-        //public Usuario Get(string idEmail) => new UsuariosRepository().Retrieve(idEmail);
+        // GET: api/Usuarios?idEmail=example@gmail.com
 
-        [Authorize(Roles = "Admin")]
-        public List<BetsByEmailAndMarketTypeDTO> Get(string idEmail, double tipoMercado) => new UsuariosRepository().RetrieveBetsByEmail(idEmail, tipoMercado);
+        //[Authorize(Roles = "Admin")]
+        //public List<BetsByEmailAndMarketTypeDTO> Get(string idEmail, double tipoMercado) => new UsuariosRepository().RetrieveBetsByEmail(idEmail, tipoMercado);
         
         // POST: api/Usuarios
         public void Post([FromBody]string value)

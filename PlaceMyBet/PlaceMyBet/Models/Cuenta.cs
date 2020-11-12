@@ -7,22 +7,19 @@ namespace PlaceMyBet.Models
 {
     public class Cuenta
     {
-        private int idTarjeta;
-        private double saldo;
-        private string nombreBanco;
-        private string refEmail;
+        public int CuentaId { get; set; }
+        public double Saldo { get; set; }
+        public string NombreBanco { get; set; }
+        public string UsuarioId { get; set; }
+        public Usuario Usuario { get; set; }
 
-        public int IdTarjeta { get => idTarjeta; set => idTarjeta = value; }
-        public double Saldo { get => saldo; set => saldo = value; }
-        public string NombreBanco { get => nombreBanco; set => nombreBanco = value; }
-        public string RefEmail { get => refEmail; set => refEmail = value; }
-
-        public Cuenta(int idTarjeta, double saldo, string nombreBanco, string refEmail)
+        public Cuenta() { }
+        public Cuenta(int cuentaId, double saldo, string nombreBanco, string usuarioId)
         {
-            this.idTarjeta = idTarjeta;
-            this.saldo = saldo;
-            this.nombreBanco = nombreBanco;
-            this.refEmail = refEmail;
+            CuentaId = cuentaId;
+            Saldo = saldo;
+            NombreBanco = nombreBanco;
+            UsuarioId = usuarioId;
         }
     }
 }

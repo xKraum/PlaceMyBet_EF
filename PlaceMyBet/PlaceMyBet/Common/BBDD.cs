@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 
 namespace PlaceMyBet.Common
-{
+{/*
     public class BBDD
     {
         private const string connectionString = "datasource=127.0.0.1;" + "port=3306;" + "username=root;" + "password=;" + "database=placemybet;" + "SslMode=none;";
@@ -118,6 +118,6 @@ namespace PlaceMyBet.Common
         MySqlCommand commandDatabase = new MySqlCommand("INSERT INTO `tabla1` (`id`, `campo1`) VALUES (@id, @campo1)");
         commandDatabase.Parameters.AddWithValue("@id", id);
         commandDatabase.Parameters.AddWithValue("@campo1", valor1);
-        */
-    }
+        
+    }*/
 }

@@ -5,48 +5,27 @@ using System.Web;
 
 namespace PlaceMyBet.Models
 {
-    public class Mercado : MercadoDTO
+    public class Mercado
     {
-        private int idMercado;
-        private int refEvento;
+        public int MercadoId { get; set; }
+        public double TipoMercado { get; set; }
+        public double CuotaOver { get; set; }
+        public double CuotaUnder { get; set; }
+        public double DineroOver { get; set; }
+        public double DineroUnder { get; set; }
+        public int EventoId { get; set; }
+        public Evento Evento { get; set; }
 
-        private double dineroOver;
-        private double dineroUnder;
-
-        public int IdMercado { get => idMercado; set => idMercado = value; }
-        public int RefEvento { get => refEvento; set => refEvento = value; }
-
-        public double DineroOver { get => dineroOver; set => dineroOver = value; }
-        public double DineroUnder { get => dineroUnder; set => dineroUnder = value; }
-
-        public Mercado(int idMercado, int refEvento, double tipoMercado, double cuotaOver, double cuotaUnder, double dineroOver, double dineroUnder)
-            : base(tipoMercado, cuotaOver, cuotaUnder)
+        public Mercado() { }
+        public Mercado(int mercadoId, double tipoMercado, double cuotaOver, double cuotaUnder, double dineroOver, double dineroUnder, int eventoId)
         {
-            this.idMercado = idMercado;
-            this.refEvento = refEvento;
-            base.tipoMercado = tipoMercado;
-            base.cuotaOver = cuotaOver;
-            base.cuotaUnder = cuotaUnder;
-            this.dineroOver = dineroOver;
-            this.dineroUnder = dineroUnder;
-        }
-    }
-
-    public class MercadoDTO
-    {
-        protected double tipoMercado;
-        protected double cuotaOver;
-        protected double cuotaUnder;
-
-        public double TipoMercado { get => tipoMercado; set => tipoMercado = value; }
-        public double CuotaOver { get => cuotaOver; set => cuotaOver = value; }
-        public double CuotaUnder { get => cuotaUnder; set => cuotaUnder = value; }
-
-        public MercadoDTO(double tipoMercado, double cuotaOver, double cuotaUnder)
-        {
-            this.tipoMercado = tipoMercado;
-            this.cuotaOver = cuotaOver;
-            this.cuotaUnder = cuotaUnder;
+            MercadoId = mercadoId;
+            TipoMercado = tipoMercado;
+            CuotaOver = cuotaOver;
+            CuotaUnder = cuotaUnder;
+            DineroOver = dineroOver;
+            DineroUnder = dineroUnder;
+            EventoId = eventoId;
         }
     }
 }

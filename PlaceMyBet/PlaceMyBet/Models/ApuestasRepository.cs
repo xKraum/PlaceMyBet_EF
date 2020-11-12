@@ -12,113 +12,33 @@ namespace PlaceMyBet.Models
         internal List<Apuesta> Retrieve()
         {
             List<Apuesta> bets = new List<Apuesta>();
-
-            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM apuestas;");
-
-            foreach (var item in dataReceived)
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                bets.Add(new Apuesta((int)item[0], (string)item[1], (int)item[2], (string)item[3], (double)item[4], (double)item[5], (DateTime)item[6], (double)item[9]));
+                bets = context.Apuestas.ToList();
             }
-
             return bets;
         }
 
         internal Apuesta Retrieve(int id)
         {
-            Apuesta b = null;
-
-            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas WHERE `idApuesta` = {id};");
-            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM apuestas WHERE `idApuesta` = @id;");
-            commandDatabase.Parameters.AddWithValue("@id", id);
-            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
-
-            if (dataReceived.Count > 0)
-                b = new Apuesta((int)dataReceived[0][0], (string)dataReceived[0][1], (int)dataReceived[0][2], (string)dataReceived[0][3], (double)dataReceived[0][4],
-                    (double)dataReceived[0][5], (DateTime)dataReceived[0][6], (double)dataReceived[0][9]);
-
-            return b;
-        }
-
-        //Obtener objeto sin información sensible (ids, datos importantes, etc.)
-        internal List<ApuestaDTO> RetrieveDTO()
-        {
-            List<ApuestaDTO> bets = new List<ApuestaDTO>();
-
-            List<ArrayList> dataReceived = Common.BBDD.GetData("SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado;");
-
-            foreach (var item in dataReceived)
+            Apuesta bet = null;
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                bets.Add(new ApuestaDTO((string)item[1], (string)item[3], (double)item[4], (double)item[5], (DateTime)item[6], (double)item[9]));
+                bet = context.Apuestas.Where(s => s.ApuestaId == id).FirstOrDefault();
             }
-
-            return bets;
+            return bet;
         }
 
-        internal ApuestaDTO RetrieveDTO(int id)//Consultas parametrizadas
-        {
-            ApuestaDTO b = null;
+        //private double CalculateQuota(Apuesta bet, Mercado market, bool isOver)
+        //{
+        //    double probability;
 
-            //List<ArrayList> dataReceived = Common.BBDD.GetData($"SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
-            //    $"WHERE `idApuesta` = {id};");
-            MySqlCommand commandDatabase = new MySqlCommand("SELECT * FROM apuestas INNER JOIN mercados ON apuestas.refMercado = mercados.idMercado " +
-                $"WHERE `idApuesta` = @id;");
-            commandDatabase.Parameters.AddWithValue("@id", id);
-            List<ArrayList> dataReceived = Common.BBDD.GetData(commandDatabase);
+        //    if (isOver)
+        //        probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
+        //    else
+        //        probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
 
-            if (dataReceived.Count > 0)
-                b = new ApuestaDTO((string)dataReceived[0][1], (string)dataReceived[0][3], (double)dataReceived[0][4],
-                    (double)dataReceived[0][5], (DateTime)dataReceived[0][6], (double)dataReceived[0][9]);
-
-            return b;
-        }
-
-
-        internal void Save(Apuesta bet)//Consultas NO parametrizadas
-        {
-            Mercado market = new MercadosRepository().Retrieve(bet.RefMercado);
-            //Evento e = new EventosRepository().Retrieve(market.RefEvento);
-
-            double quota = (bet.TipoOverUnder == "Over") ? market.CuotaOver : market.CuotaUnder; 
-            
-            //Inserto una nueva apuesta, con el correspondiente DINERO APOSTADO a Over o Under.
-            Common.BBDD.SetData($"INSERT INTO `APUESTAS` (`idApuesta`, `refEmail`, `refMercado`, `tipoOverUnder`, `cuota`, `dineroApostado`, `fecha`) " +
-                $"VALUES (NULL, '{bet.RefEmail}', {bet.RefMercado}, '{bet.TipoOverUnder}', {quota.ToString().Replace(',', '.')}," +
-                $" {bet.DineroApostado.ToString().Replace(',', '.')}, '{DateTime.Now.ToString("yyyy-MM-dd")}')");
-
-            //Actualizo el DINERO OVER/UNDER de la tabla MERCADOS para poder actualizar luego la cuota.
-            if (bet.TipoOverUnder == "Over")
-                Common.BBDD.SetData($"UPDATE `MERCADOS` " +
-                    $"SET `dineroOver`={(bet.DineroApostado + market.DineroOver).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
-                    $"WHERE `idMercado`={bet.RefMercado};");
-            else
-                Common.BBDD.SetData($"UPDATE `MERCADOS` " +
-                    $"SET `dineroUnder`={(bet.DineroApostado + market.DineroUnder).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)} " +
-                    $"WHERE `idMercado`={bet.RefMercado};");
-
-            //Vuelvo a crear el objeto MERCADO para que tenga el DINERO OVER/UNDER actualizado
-            market = new MercadosRepository().Retrieve(bet.RefMercado);
-
-            //Calculo la nueva CUOTA OVER UNDER.
-            string newQuotaOver = CalculateQuota(bet, market, true).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            string newQuotaUnder = CalculateQuota(bet, market, false).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-
-            //Actualizo la CUOTA según sea OVER o UNDER en la tabla MERCADOS.
-            //if (bet.TipoOverUnder == "Over")
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaOver`={newQuotaOver} WHERE `idMercado`={bet.RefMercado};");
-            //else
-                Common.BBDD.SetData($"UPDATE `MERCADOS` SET `cuotaUnder`={newQuotaUnder} WHERE `idMercado`={bet.RefMercado};");
-        }
-
-        private double CalculateQuota(Apuesta bet, Mercado market, bool isOver)
-        {
-            double probability;
-
-            if (isOver)
-                probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
-            else
-                probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
-
-            return 1 / probability * 0.95;
-        }
+        //    return 1 / probability * 0.95;
+        //}
     }
 }
