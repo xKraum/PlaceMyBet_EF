@@ -15,7 +15,7 @@ namespace PlaceMyBet.Controllers
         public List<MercadoDTO> Get() => new MercadosRepository().RetrieveDTO();
 
         // GET: api/Mercados/5
-        public MercadoDTO Get(int id) => new MercadosRepository().RetrieveDTO(id);
+        public Mercado Get(int id) => new MercadosRepository().Retrieve(id);//No pide DTO (aunque está implementado el método).
 
         // POST: api/Mercados
         public void Post([FromBody] Mercado mercado) => new MercadosRepository().Save(mercado);

@@ -15,7 +15,6 @@ namespace PlaceMyBet.Models
             List<Apuesta> bets = new List<Apuesta>();
             using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                //bets = context.Apuestas.ToList();
                 bets = context.Apuestas.Include(m => m.Mercado).ToList();
             }
             return bets;
