@@ -12,18 +12,16 @@ namespace PlaceMyBet.Controllers
     public class MercadosController : ApiController
     {
         // GET: api/Mercados
-        public List<Mercado> Get() => new MercadosRepository().Retrieve();
+        public List<MercadoDTO> Get() => new MercadosRepository().RetrieveDTO();
 
         // GET: api/Mercados/5
-        public Mercado Get(int id) => new MercadosRepository().Retrieve(id);
+        public MercadoDTO Get(int id) => new MercadosRepository().RetrieveDTO(id);
 
         // POST: api/Mercados
-        public void Post([FromBody]string value)
-        {
-        }
+        public void Post([FromBody] Mercado mercado) => new MercadosRepository().Save(mercado);
 
         // PUT: api/Mercados/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Mercado mercado)
         {
         }
 

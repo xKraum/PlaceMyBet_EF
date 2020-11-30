@@ -37,5 +37,27 @@ namespace PlaceMyBet.Models
                 context.SaveChanges();
             }
         }
+
+        internal void Update(int id, Evento e)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                Evento dbEvent = context.Eventos.Where(x => x.EventoId == id).FirstOrDefault();
+                dbEvent.EquipoLocal = e.EquipoLocal;
+                dbEvent.EquipoVisitante = e.EquipoVisitante;
+                context.SaveChanges();
+            }
+        }
+
+        internal void Remove(int eventId)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                Evento e = context.Eventos.Where(x => x.EventoId == eventId).FirstOrDefault();
+                if (e != null)
+                    context.Eventos.Remove(e);
+                context.SaveChanges();
+            }
+        }
     }
 }

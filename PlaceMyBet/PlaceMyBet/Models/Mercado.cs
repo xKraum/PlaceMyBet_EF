@@ -29,4 +29,18 @@ namespace PlaceMyBet.Models
             EventoId = eventoId;
         }
     }
+
+    public class MercadoDTO
+    {
+        public double TipoMercado { get; set; }
+        public double CuotaOver { get; set; }
+        public double CuotaUnder { get; set; }
+
+        public MercadoDTO(double tipoMercado, double cuotaOver, double cuotaUnder)
+        {
+            TipoMercado = tipoMercado;
+            CuotaOver = cuotaOver;
+            CuotaUnder = cuotaUnder;
+        }
+    }
 }

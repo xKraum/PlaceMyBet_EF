@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,8 @@ namespace PlaceMyBet.Models
             List<Apuesta> bets = new List<Apuesta>();
             using (PlaceMyBetContext context = new PlaceMyBetContext())
             {
-                bets = context.Apuestas.ToList();
+                //bets = context.Apuestas.ToList();
+                bets = context.Apuestas.Include(m => m.Mercado).ToList();
             }
             return bets;
         }
@@ -29,16 +31,79 @@ namespace PlaceMyBet.Models
             return bet;
         }
 
-        //private double CalculateQuota(Apuesta bet, Mercado market, bool isOver)
-        //{
-        //    double probability;
+        internal void Save(Apuesta bet)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                //Completar datos faltantes de la apuesta
+                Mercado mercado = new MercadosRepository().Retrieve(bet.MercadoId);
+                bet.TipoMercado = mercado.TipoMercado;
+                if (bet.TipoOverUnder == "Over")
+                    bet.Cuota = mercado.CuotaOver;
+                else
+                    bet.Cuota = mercado.CuotaUnder;
+                bet.Fecha = DateTime.Now;
 
-        //    if (isOver)
-        //        probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
-        //    else
-        //        probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
+                //Insertar apuesta (dinero apostado, tipo de mercado...)
+                context.Apuestas.Add(bet);
+                context.SaveChanges();
 
-        //    return 1 / probability * 0.95;
-        //}
+                //Actualizar/Añadir el dinero Over o Under en mercados antes de actualizar la cuota.
+                if (bet.TipoOverUnder == "Over")
+                    new MercadosRepository().UpdateMoney(bet.MercadoId, bet.DineroApostado, 0);
+                else
+                    new MercadosRepository().UpdateMoney(bet.MercadoId, 0, bet.DineroApostado);
+
+                //Refrescar objeto MERCADO para que tengo el dinero apostado actualizado.
+                Mercado market = new MercadosRepository().Retrieve(bet.MercadoId);
+
+                //Recálculo de las cuotas Over y Under
+                double newQuotaOver = CalculateQuota(market, true);
+                double newQuotaUnder = CalculateQuota(market, false);
+
+                //Insertar las nuevas cuotas en MERCADOS.
+                new MercadosRepository().UpdateQuota(market.MercadoId, newQuotaOver, newQuotaUnder);
+            }
+        }
+
+        private double CalculateQuota(Mercado market, bool isOver)
+        {
+            double probability;
+
+            if (isOver)
+                probability = market.DineroOver / (market.DineroOver + market.DineroUnder);
+            else
+                probability = market.DineroUnder / (market.DineroOver + market.DineroUnder);
+
+            return (double)Decimal.Round((decimal)(1 / probability * 0.95), 2);
+        }
+
+        private ApuestaDTO ToDTO(Apuesta bet, Mercado market) => new ApuestaDTO(bet.UsuarioId, market.EventoId, bet.TipoOverUnder, bet.Cuota, bet.DineroApostado);
+
+        internal List<ApuestaDTO> RetrieveDTO()
+        {
+            List<Apuesta> bets = new List<Apuesta>();
+            List<ApuestaDTO> betsDTO = new List<ApuestaDTO>();
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                bets = context.Apuestas.Include(m => m.Mercado).ToList();
+            }
+            foreach (var bet in bets)
+            {
+                //betsDTO.Add(new ApuestaDTO(bet.UsuarioId, bet.Mercado.EventoId, bet.TipoOverUnder, bet.Cuota, bet.DineroApostado));
+                betsDTO.Add(ToDTO(bet, bet.Mercado));
+            }
+            return betsDTO;
+        }
+
+        internal ApuestaDTO RetrieveDTO(int id)
+        {
+            Apuesta bet = null;
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                bet = context.Apuestas.Where(s => s.ApuestaId == id).Include(m => m.Mercado).FirstOrDefault();
+            }
+            return ToDTO(bet, bet.Mercado);
+        }
     }
 }
