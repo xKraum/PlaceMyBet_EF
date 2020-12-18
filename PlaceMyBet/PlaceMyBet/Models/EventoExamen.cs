@@ -35,5 +35,31 @@ namespace PlaceMyBet.Models
         public double CuotaOver { get; set; }
         public double CuotaUnder { get; set; }
     }
+
+
     /*** Fin Ejercicio 1 ***/
+
+    /*** Ejercicio 2 ***/
+    public class Ej2
+    {
+        public Ej2(string equipoLocal, string equipoVisitante, double tipoMercado, double cuotaOver, double cuotaUnder, double dineroOver, double dineroUnder)
+        {
+            EquipoLocal = equipoLocal;
+            EquipoVisitante = equipoVisitante;
+            TipoMercado = tipoMercado;
+            CuotaOver = cuotaOver;
+            CuotaUnder = cuotaUnder;
+            DineroOver = dineroOver;
+            DineroUnder = dineroUnder;
+        }
+
+        public string EquipoLocal { get; set; }
+        public string EquipoVisitante { get; set; }
+        public double TipoMercado { get; set; }
+        public double CuotaOver { get; set; }
+        public double CuotaUnder { get; set; }
+        public double DineroOver { get; set; }
+        public double DineroUnder { get; set; }
+    }
+    /*** Fin Ejercicio 2 ***/
 }

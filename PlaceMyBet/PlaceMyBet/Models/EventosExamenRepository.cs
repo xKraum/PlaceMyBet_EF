@@ -42,5 +42,21 @@ namespace PlaceMyBet.Models
             return eventosEj1;
         }
         /*** Fin Ejercicio 1 ***/
+
+        /*** Ejercicio 2 ***/
+        internal void Save(Ej2 e)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                int maxEvent = context.Eventos.Max(p => p.EventoId);
+                int maxMarket = context.Mercados.Max(p => p.MercadoId);
+                Evento evento = new Evento(maxEvent + 1, e.EquipoLocal, e.EquipoVisitante, DateTime.Now);
+                Mercado mercado = new Mercado(maxMarket + 1, e.TipoMercado, e.CuotaOver, e.CuotaUnder, e.DineroOver, e.DineroUnder, evento.EventoId);
+                context.Eventos.Add(evento);
+                context.Mercados.Add(mercado);
+                context.SaveChanges();
+            }
+        }
+        /*** Fin Ejercicio 2 ***/
     }
 }

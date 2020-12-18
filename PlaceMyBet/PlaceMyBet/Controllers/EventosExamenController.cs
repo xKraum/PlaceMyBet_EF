@@ -28,9 +28,9 @@ namespace PlaceMyBet.Controllers
         }
 
         // POST: api/EventosExamen
-        public void Post([FromBody]string value)
-        {
-        }
+        /*** Ejercicio 2 ***/
+        public void Post([FromBody] Ej2 e) => new EventosExamenRepository().Save(e);
+        /*** Fin Ejercicio 2 ***/
 
         // PUT: api/EventosExamen/5
         public void Put(int id, [FromBody]string value)
