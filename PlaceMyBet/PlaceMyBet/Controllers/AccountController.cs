@@ -117,13 +117,13 @@ namespace PlaceMyBet.Controllers
         }
 
         // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [Route("ChangePassword"), HttpPost]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model, string UsuarioId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             ApplicationUser user = await UserManager.FindByEmailAsync(UsuarioId);
             IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword,
