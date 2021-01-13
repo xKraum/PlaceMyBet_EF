@@ -16,11 +16,13 @@ using Microsoft.Owin.Security.OAuth;
 using PlaceMyBet.Models;
 using PlaceMyBet.Providers;
 using PlaceMyBet.Results;
+using System.Web.Http.Cors;
 
 namespace PlaceMyBet.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("api/Account")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -116,14 +118,15 @@ namespace PlaceMyBet.Controllers
 
         // POST api/Account/ChangePassword
         [Route("ChangePassword")]
-        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model, string UsuarioId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+            ApplicationUser user = await UserManager.FindByEmailAsync(UsuarioId);
+            IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword,
                 model.NewPassword);
             
             if (!result.Succeeded)

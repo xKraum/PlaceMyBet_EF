@@ -12,8 +12,23 @@ namespace PlaceMyBet.Models
     {
         internal List<Usuario> Retrieve()
         {
-            //List<Usuario> users = new List<Usuario>();
-            return null;
+            List<Usuario> users = new List<Usuario>();
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                users = context.Usuarios.ToList();
+            }
+            return users;
+        }
+
+        internal void Remove(string UsuarioId)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                Usuario u = context.Usuarios.Where(x => x.UsuarioId == UsuarioId).FirstOrDefault();
+                if (u != null)
+                    context.Usuarios.Remove(u);
+                context.SaveChanges();
+            }
         }
     }
 }
