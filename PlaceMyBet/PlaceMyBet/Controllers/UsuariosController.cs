@@ -34,7 +34,6 @@ namespace PlaceMyBet.Controllers
         //}
 
         // DELETE: api/Usuarios/5
-        public void Get(string UsuarioId) => new UsuariosRepository().Remove(UsuarioId);
 
         [Route("RemoveUsuario"), HttpDelete]
         public void Delete(string UsuarioId) => new UsuariosRepository().Remove(UsuarioId);

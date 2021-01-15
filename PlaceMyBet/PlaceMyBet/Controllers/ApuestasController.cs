@@ -13,7 +13,7 @@ namespace PlaceMyBet.Controllers
     public class ApuestasController : ApiController
     {
         // GET: api/Apuestas
-        public List<ApuestaDTO> Get() => new ApuestasRepository().RetrieveDTO();
+        public List<ApuestaPMM_DTO> Get() => new ApuestasRepository().RetrieveToBackoffice();
 
         // GET: api/Apuestas/5
         public ApuestaDTO Get(int id) => new ApuestasRepository().RetrieveDTO(id);

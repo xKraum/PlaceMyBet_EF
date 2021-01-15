@@ -49,4 +49,15 @@ namespace PlaceMyBet.Models
             DineroApostado = dineroApostado;
         }
     }
+
+    public class ApuestaPMM_DTO : Apuesta
+    {
+        public int EventoId { get; set; }
+
+        public ApuestaPMM_DTO(string tipoOverUnder, double cuota, double dineroApostado, DateTime fecha, int apuestaId, double tipoMercado, int mercadoId, string usuarioId, int eventoId)
+            : base(tipoOverUnder, cuota, dineroApostado, fecha, apuestaId, tipoMercado, mercadoId, usuarioId)
+        {
+            EventoId = eventoId;
+        }
+    }
 }

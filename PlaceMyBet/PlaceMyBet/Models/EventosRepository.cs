@@ -49,6 +49,16 @@ namespace PlaceMyBet.Models
             }
         }
 
+        internal void UpdateDate(int id, string date)
+        {
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                Evento dbEvent = context.Eventos.Where(x => x.EventoId == id).FirstOrDefault();
+                dbEvent.Fecha = DateTime.Parse(date);
+                context.SaveChanges();
+            }
+        }
+
         internal void Remove(int eventId)
         {
             using (PlaceMyBetContext context = new PlaceMyBetContext())

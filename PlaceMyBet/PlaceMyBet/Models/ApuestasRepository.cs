@@ -104,5 +104,23 @@ namespace PlaceMyBet.Models
             }
             return ToDTO(bet, bet.Mercado);
         }
+
+        private ApuestaPMM_DTO ToBackofficeDTO(Apuesta bet, Mercado market) => new ApuestaPMM_DTO(bet.TipoOverUnder, bet.Cuota, bet.DineroApostado, 
+            bet.Fecha, bet.ApuestaId, bet.TipoMercado, bet.MercadoId, bet.UsuarioId, market.EventoId);
+
+        internal List<ApuestaPMM_DTO> RetrieveToBackoffice()
+        {
+            List<Apuesta> bets = new List<Apuesta>();
+            List<ApuestaPMM_DTO> betsDTO = new List<ApuestaPMM_DTO>();
+            using (PlaceMyBetContext context = new PlaceMyBetContext())
+            {
+                bets = context.Apuestas.Include(m => m.Mercado).ToList();
+            }
+            foreach (var bet in bets)
+            {
+                betsDTO.Add(ToBackofficeDTO(bet, bet.Mercado));
+            }
+            return betsDTO;
+        }
     }
 }
